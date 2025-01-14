@@ -7,6 +7,11 @@ class CameraViewModel: ObservableObject {
     @Published var showImagePicker = false
     @Published var sourceType: UIImagePickerController.SourceType = .camera
     @Published var encodedImageData: String = ""
+    @Published var isAnalyzing = false
+    @Published var mealAnalysis: MealAnalysis?
+    @Published var errorMessage: String?
+    
+    private let analysisService = FoodAnalysisService()
     
     // Debug logging function
     private func log(_ message: String) {
@@ -49,5 +54,27 @@ class CameraViewModel: ObservableObject {
         
         encodedImageData = imageData.base64EncodedString()
         log("Image successfully encoded to base64")
+    }
+    
+    @MainActor
+    func analyzeFoodImage() {
+        guard !encodedImageData.isEmpty else {
+            log("No image data to analyze")
+            return
+        }
+        
+        isAnalyzing = true
+        errorMessage = nil
+        
+        Task {
+            do {
+                mealAnalysis = try await analysisService.analyzeFood(imageBase64: encodedImageData)
+                log("Analysis completed successfully")
+            } catch {
+                errorMessage = "Failed to analyze food: \(error.localizedDescription)"
+                log("Analysis failed: \(error)")
+            }
+            isAnalyzing = false
+        }
     }
 } 
