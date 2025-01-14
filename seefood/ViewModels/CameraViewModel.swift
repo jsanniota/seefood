@@ -1,0 +1,53 @@
+import SwiftUI
+import AVFoundation
+
+// Rule applied: Debug logs
+class CameraViewModel: ObservableObject {
+    @Published var selectedImage: UIImage?
+    @Published var showImagePicker = false
+    @Published var sourceType: UIImagePickerController.SourceType = .camera
+    @Published var encodedImageData: String = ""
+    
+    // Debug logging function
+    private func log(_ message: String) {
+        #if DEBUG
+        print("📸 CameraViewModel: \(message)")
+        #endif
+    }
+    
+    func checkCameraPermission() {
+        switch AVCaptureDevice.authorizationStatus(for: .video) {
+        case .authorized:
+            log("Camera access authorized")
+            showImagePicker = true
+        case .notDetermined:
+            log("Requesting camera permission")
+            AVCaptureDevice.requestAccess(for: .video) { [weak self] granted in
+                DispatchQueue.main.async {
+                    if granted {
+                        self?.log("Camera permission granted")
+                        self?.showImagePicker = true
+                    } else {
+                        self?.log("Camera permission denied")
+                    }
+                }
+            }
+        case .denied, .restricted:
+            log("Camera access denied or restricted")
+            // Handle showing alert to user about camera access
+        @unknown default:
+            break
+        }
+    }
+    
+    func encodeImage() {
+        guard let image = selectedImage,
+              let imageData = image.jpegData(compressionQuality: 0.7) else {
+            log("Failed to encode image")
+            return
+        }
+        
+        encodedImageData = imageData.base64EncodedString()
+        log("Image successfully encoded to base64")
+    }
+} 

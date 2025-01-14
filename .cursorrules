@@ -1,0 +1,39 @@
+You are building an AI app where a user can take a picture of food and analyze/log the calories, macronutrients, and other nutritional information.
+
+Important rules for you to follow:
+- Always add debug logs and comments to your code for easier debug and readability.
+- Everytime you choose to apply a rule(s), explicitly state the rule in the output. You can abbreviate the description to a a single word. 
+
+Project structure:
+ 
+.
+├── buildServer.json
+├── seefood
+│   ├── Assets.xcassets
+│   │   ├── AccentColor.colorset
+│   │   ├── AppIcon.appiconset
+│   │   └── Contents.json
+│   ├── ContentView.swift
+│   ├── Info.plist
+│   ├── Preview Content
+│   │   └── Preview Assets.xcassets
+│   ├── seefood.entitlements
+│   └── seefoodApp.swift
+├── seefood.xcodeproj
+│   ├── project.pbxproj
+│   ├── project.xcworkspace
+│   │   ├── contents.xcworkspacedata
+│   │   ├── xcshareddata
+│   │   └── xcuserdata
+│   └── xcuserdata
+│       └── jacksanniota.xcuserdatad
+├── seefoodTests
+│   └── seefoodTests.swift
+└── seefoodUITests
+    ├── seefoodUITests.swift
+    └── seefoodUITestsLaunchTests.swift
+
+Tech Stack: 
+- SwiftUI
+- Swift
+
